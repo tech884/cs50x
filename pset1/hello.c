@@ -6,7 +6,7 @@
  * Outputs "hello, world" to standard output device in the session.
  */
  
- #include <stdio.h>
+#include <stdio.h>
 
 int main(void)
 {
