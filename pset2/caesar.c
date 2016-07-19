@@ -3,9 +3,10 @@
  
  Eric L
  
- Get user's secret key (non-negative integer) from command line,
- user then enters word(s), and then
- encrypts word(s) with the key as output.
+ Get user's numeric key (non-negative integer) from command line,
+ user then enters original text,
+ Caesar cipher uses key to encrypt original text with the key, and then
+ outputs ciphered text.
 */
 
 #include <stdio.h>
