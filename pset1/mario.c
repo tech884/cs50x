@@ -1,3 +1,12 @@
+/**
+ Name: mario.c
+ 
+ Eric L
+ 
+ Prompt the user to enter a non negative number and then
+ outputs a half-pyramind using hashes (#) for end blocks.
+*/
+
 #include <stdio.h>
 #include <cs50.h>
 
