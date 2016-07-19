@@ -3,9 +3,9 @@
   
   Eric L
   
-  Prompt the user for an amount of money as a float value and then.
-  greedy.c will calculate the minumum number of coins needed to achieve that
-  amount entered using quarters, dimes, nickels, and pennies.
+  Prompt the user for an amount of money as a float value,
+  calculate the minumum number of coins needed to equal the amount, and then
+  output the total number of coins (using quarters, dimes, nickels, and pennies).
 */
 
 #include <stdio.h>
