@@ -7,6 +7,9 @@
  user then enters original text,
  Caesar cipher uses key to encrypt original text with the key, and then
  outputs ciphered text.
+ 
+ Usage: ./caesar key
+ where key is the non-negative integer value use to shift (encrypt) the original text
 */
 
 #include <stdio.h>
