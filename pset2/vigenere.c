@@ -7,6 +7,9 @@
   user then enters original text,
   Vigenere cipher uses keyword to encrypt original text with the keyword, and then
   outputs ciphered text.
+  
+  Usage: ./vigenere keyword
+  where keyword is the alphabetic keyword used to shift (encrypt) the original text
 */
 
 #include <stdio.h>
