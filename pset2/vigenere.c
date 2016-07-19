@@ -3,10 +3,10 @@
   
   Eric L
 
-  Applies vigenere cipher to the input with the key as a command line argument,
-  and then prints out the ciphered text.
-  Vignere cipher uses a keyword to encrpt the original text.
-  Valid keys must only contain characters A-Z or a-z. 
+  Get user's alphabetic keyword (only contains characters A-Z or a-z) from command line,
+  user then enters original text,
+  Vigenere cipher uses keyword to encrypt original text with the keyword, and then
+  outputs ciphered text.
 */
 
 #include <stdio.h>
