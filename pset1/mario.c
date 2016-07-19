@@ -3,7 +3,7 @@
  
  Eric L
  
- Prompt the user to enter a non negative number and then
+ Prompt the user to enter a non-negative number and then
  output a half-pyramid using hashes (#) for end blocks.
 */
 
