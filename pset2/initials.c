@@ -1,3 +1,12 @@
+/**
+ Name: initials.c
+ 
+ Eric L
+ 
+ Takes the user input of a name and then
+ outputs the first initials of the entered name (i.e. first, middle, last).
+*/
+
 #include <stdio.h>
 #include <cs50.h>
 #include <ctype.h>
