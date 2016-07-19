@@ -9,7 +9,7 @@
  outputs ciphered text.
  
  Usage: ./caesar key
- where key is the non-negative integer value use to shift (encrypt) the original text
+ where key is the non-negative integer value used to shift (encrypt) the original text
 */
 
 #include <stdio.h>
