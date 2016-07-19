@@ -4,8 +4,8 @@
  Eric L
  
  Get user's secret key from command line,
- user then enters a words and then
- outputs the first initials of the entered name (i.e. first, middle, last).
+ user then enters word(s), and then
+ encrypts word(s) with the key as output.
 */
 
 #include <stdio.h>
