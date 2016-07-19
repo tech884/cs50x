@@ -1,3 +1,13 @@
+/**
+ Name: caesar.c
+ 
+ Eric L
+ 
+ Get user's secret key from command line,
+ user then enters a words and then
+ outputs the first initials of the entered name (i.e. first, middle, last).
+*/
+
 #include <stdio.h>
 #include <cs50.h>
 #include <stdlib.h>
