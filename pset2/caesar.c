@@ -3,7 +3,7 @@
  
  Eric L
  
- Get user's secret key from command line,
+ Get user's secret key (non-negative integer) from command line,
  user then enters word(s), and then
  encrypts word(s) with the key as output.
 */
