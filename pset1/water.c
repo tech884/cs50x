@@ -3,7 +3,8 @@
  
  Eric L
  
- Takes user input of shower length and outputs the equivalent volume of water bottles.
+ Prompt the user to enter shower length and then
+ output the equivalent volume of water bottles.
 */
 
 #include <stdio.h>
