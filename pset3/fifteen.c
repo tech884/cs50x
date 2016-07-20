@@ -1,15 +1,16 @@
+
 /**
  * fifteen.c
  *
  * Computer Science 50
  * Problem Set 3
  *
- * Implements Game of Fifteen (generalized to d x d).
+ * Implements the Game of Fifteen (generalized to d x d).
  *
- * Usage: fifteen d
+ * Usage: ./fifteen d
  *
  * whereby the board's dimensions are to be d x d,
- * where d must be in [DIM_MIN,DIM_MAX]
+ * where d must be in [MIN,MAX]
  *
  * Note that usleep is obsolete, but it offers more granularity than
  * sleep and is simpler to use than nanosleep; `man usleep` for more.
@@ -22,15 +23,20 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-// constants
-#define DIM_MIN 3
-#define DIM_MAX 9
+// board's minimal dimension
+#define MIN 3
 
-// board
-int board[DIM_MAX][DIM_MAX];
+// board's maximal dimension
+#define MAX 9
 
-// dimensions
+// board, whereby board[i][j] represents row i and column j
+int board[MAX][MAX];
+
+// board's dimension
 int d;
+
+// Current Blank Space location
+int blank_row, blank_col;
 
 // prototypes
 void clear(void);
@@ -39,34 +45,28 @@ void init(void);
 void draw(void);
 bool move(int tile);
 bool won(void);
+void save(void);
 
 int main(int argc, string argv[])
 {
+    // greet player
+    greet();
+
     // ensure proper usage
     if (argc != 2)
     {
-        printf("Usage: fifteen d\n");
+        printf("Usage: ./fifteen d\n");
         return 1;
     }
 
     // ensure valid dimensions
     d = atoi(argv[1]);
-    if (d < DIM_MIN || d > DIM_MAX)
+    if (d < MIN || d > MAX)
     {
         printf("Board must be between %i x %i and %i x %i, inclusive.\n",
-            DIM_MIN, DIM_MIN, DIM_MAX, DIM_MAX);
+            MIN, MIN, MAX, MAX);
         return 2;
     }
-
-    // open log
-    FILE* file = fopen("log.txt", "w");
-    if (file == NULL)
-    {
-        return 3;
-    }
-
-    // greet user with instructions
-    greet();
 
     // initialize the board
     init();
@@ -80,41 +80,20 @@ int main(int argc, string argv[])
         // draw the current state of the board
         draw();
 
-        // log the current state of the board (for testing)
-        for (int i = 0; i < d; i++)
-        {
-            for (int j = 0; j < d; j++)
-            {
-                fprintf(file, "%i", board[i][j]);
-                if (j < d - 1)
-                {
-                    fprintf(file, "|");
-                }
-            }
-            fprintf(file, "\n");
-        }
-        fflush(file);
+        // saves the current state of the board (for testing)
+        save();
 
         // check for win
         if (won())
         {
             printf("ftw!\n");
+            printf("Congratulations! You have won a difficult game.\n");
             break;
         }
 
         // prompt for move
         printf("Tile to move: ");
         int tile = GetInt();
-        
-        // quit if user inputs 0 (for testing)
-        if (tile == 0)
-        {
-            break;
-        }
-
-        // log move (for testing)
-        fprintf(file, "%i\n", tile);
-        fflush(file);
 
         // move if possible, else report illegality
         if (!move(tile))
@@ -123,14 +102,11 @@ int main(int argc, string argv[])
             usleep(500000);
         }
 
-        // sleep thread for animation's sake
+        // sleep for animation's sake
         usleep(500000);
     }
-    
-    // close log
-    fclose(file);
 
-    // success
+    // that's all folks
     return 0;
 }
 
@@ -149,17 +125,38 @@ void clear(void)
 void greet(void)
 {
     clear();
-    printf("WELCOME TO GAME OF FIFTEEN\n");
+    printf("GAME OF FIFTEEN\n");
     usleep(2000000);
 }
 
 /**
- * Initializes the game's board with tiles numbered 1 through d*d - 1
- * (i.e., fills 2D array with values but does not actually print them).  
+ * Initializes the game's board with tiles numbered 1 through d*d - 1,
+ * (i.e., fills board with values but does not actually print them),
+ * whereby board[i][j] represents row i and column j.
  */
 void init(void)
 {
-    // TODO
+    int total_tiles = (d * d) - 1;
+    
+    // Fill the board counting backwards
+    int current_tile = total_tiles;
+    for(int row=0; row < d; ++row) {
+        for(int col=0; col < d; ++col) {
+            board[row][col] = current_tile;
+            current_tile--;
+        }
+    }
+
+    // If total tiles is odd, switch tile 2 and 1.
+    // board[d-1][d-1] is the bottom right side of the board
+    if (total_tiles % 2 != 0) {
+        board[d-1][d-2] = 2;
+        board[d-1][d-3] = 1;
+    }
+
+    // Update blank space
+    blank_row = d-1;
+    blank_col = d-1;
 }
 
 /**
@@ -167,7 +164,18 @@ void init(void)
  */
 void draw(void)
 {
-    // TODO
+    for(int row=0; row < d; ++row) {
+        for(int col=0; col < d; ++col) {
+            // Replace 0 with _ for our board, otherwise print number
+            if (board[row][col] == 0) {
+                printf("%2c ", 95); // 95 is ascii num for '_'
+            }
+            else {
+                printf("%2d ", board[row][col]);
+            }
+        }
+        printf("\n");
+    }
 }
 
 /**
@@ -176,8 +184,44 @@ void draw(void)
  */
 bool move(int tile)
 {
-    // TODO
-    return false;
+    int target_row = -1;
+    int target_col = -1;
+    bool result = false;
+
+    // Check 4 possible moves around the tile. First part of each statement
+    // is to verify the access to the board is valid.
+    if ( (blank_row + 1 < d) && board[blank_row + 1][blank_col] == tile ){ // Down
+        target_row = blank_row + 1;
+        target_col = blank_col;
+    } 
+    else if ( (blank_row -1 >= 0) && board[blank_row - 1][blank_col] == tile ) { // Up
+        target_row = blank_row - 1;
+        target_col = blank_col;
+    }
+    else if ( (blank_col + 1 < d) && board[blank_row][blank_col + 1] == tile ) { // Right
+        target_row = blank_row;
+        target_col = blank_col + 1;
+    }
+    else if ( (blank_row -1 >= 0) && board[blank_row][blank_col - 1] == tile ) { // Left
+        target_row = blank_row;
+        target_col = blank_col - 1;
+    }
+
+    if(target_row > -1 || target_col > -1) {
+        // Move tile
+        board[blank_row][blank_col] = tile;
+        // Move blank
+        board[target_row][target_col] = 0;
+
+        // Update blank location
+        blank_row = target_row;
+        blank_col = target_col;
+
+        result = true;
+    }
+
+     
+    return result;
 }
 
 /**
@@ -187,5 +231,67 @@ bool move(int tile)
 bool won(void)
 {
     // TODO
-    return false;
+    int count = 1;
+    bool result = false;
+
+    for(int row=0; row < d; ++row) {
+        for (int col=0; col < d; ++col) {
+            if (count == d*d){
+                result=true;
+            }
+            else if (board[row][col] != count) {
+                break;
+            }
+            count++;
+        }
+    }
+    return result;
+}
+
+/**
+ * Saves the current state of the board to disk (for testing).
+ */
+void save(void)
+{
+    // log
+    const string log = "log.txt";
+
+    // delete existing log, if any, before first save
+    static bool saved = false;
+    if (!saved)
+    {
+        unlink(log);
+        saved = true;
+    }
+
+    // open log
+    FILE* p = fopen(log, "a");
+    if (p == NULL)
+    {
+        return;
+    }
+
+    // log board
+    fprintf(p, "{");
+    for (int i = 0; i < d; i++)
+    {
+        fprintf(p, "{");
+        for (int j = 0; j < d; j++)
+        {
+            fprintf(p, "%i", board[i][j]);
+            if (j < d - 1)
+            {
+                fprintf(p, ",");
+            }
+        }
+        fprintf(p, "}");
+        if (i < d - 1)
+        {
+            fprintf(p, ",");
+        }
+    }
+    fprintf(p, "}\n");
+
+    // close log
+    fclose(p);
 }
